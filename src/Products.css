@@ -1,0 +1,40 @@
+.rating_img{
+    width: 20px;
+    height: 20px;
+}
+
+.App > .showProducts{
+    background-color: antiquewhite;
+}
+
+.Filters{
+    background-color: antiquewhite;
+    width: 20%;
+    padding: 2rem;
+    border-right: 0.5px ridge thistle;
+    float:left;
+}
+
+.rating, .types{
+    padding: 1.5rem;
+    margin-left: 1.5rem;
+}
+
+.showProducts{
+    overflow: hidden;
+}
+
+.showProducts h1{
+    text-align: center;
+}
+
+.showRating{
+    height: 200px;
+}
+
+@media screen and (max-width: 768px) {
+    .Filters{
+        background-color: antiquewhite;
+        width: 100%;
+    }
+}

@@ -32,7 +32,7 @@ function Header() {
                     >
                         <ul>
                             <li>
-                                <a href="/#">Home</a>
+                                <a href="/">Products</a>
                             </li>
                             <li>
                                 <a href="/#">About</a>
