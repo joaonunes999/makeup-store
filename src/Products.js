@@ -13,6 +13,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
+import ModalProduct from './components/Modal';
 
 const initialProductTypes = [
     { name: "Blush", value: "blush", checked: "false" },
@@ -40,6 +41,8 @@ const GetProducts = () => {
     const [products, setProducts] = useState([]);
     const [count, setCount] = useState(15); // initial count to show initial valid items
     const [productTypes, setProductTypes] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [previewProduct, setPreviewProduct] = useState({product: {}, i: null});
 
     const fetchData = (url) => {
         fetch(url)
@@ -51,14 +54,19 @@ const GetProducts = () => {
             })
     }
 
-    const chooseProductType = (event) =>{
+    const chooseProductType = (event) => {
         initialProductTypes.forEach(element => {
-            if(element.name === event.target.value){
+            if (element.name === event.target.value) {
                 element.checked = "true";
                 setProductTypes(initialProductTypes);
                 fetchData("http://makeup-api.herokuapp.com/api/v1/products.json?product_type=" + element.value);
-            }       
+            }
         });
+    }
+
+    const handlePreview = (index) => {
+        setPreviewProduct({product:products[index], i: index});
+        setOpenModal(true);
     }
 
     const showMoreProducts = () => {  // function that will make count add by 10 to show 10 more items  
@@ -102,7 +110,7 @@ const GetProducts = () => {
             </div>
         );
     }
-    
+
     const displayRating = () => {
         return (
             //Convert scale from 0 to 5 to 0 to 100 (y vezes 100 / 5)
@@ -126,7 +134,7 @@ const GetProducts = () => {
                     </RadioGroup>
                 </FormControl>
             </div>
-    
+
         );
     }
 
@@ -154,20 +162,25 @@ const GetProducts = () => {
                                 }}
                             >
                                 <Grid container spacing={2} justifyContent="center">
-                                    {products.slice(0, count).map(product => {
+                                    {products.slice(0, count).map((product, index) => {
                                         if (product.price !== "0.0") {
                                             return (
+                                                
                                                 <Grid key={product.id}
                                                     item direction="row"
                                                     justifyContent="center"
                                                 >
                                                     <Item>
                                                         <Grid item>
-                                                            <ButtonBase sx={{ width: 128, height: 128, marginBottom: "1rem"}}>
-                                                                <Img alt="complex" src={product.api_featured_image} />
+                                                            <ButtonBase sx={{ width: 128, height: 128, marginBottom: "1rem" }}>
+                                                                <Img key={product.id} alt="complex" src={product.api_featured_image} onClick={() => handlePreview(index)} />
                                                             </ButtonBase>
                                                         </Grid>
-
+                                                        <ModalProduct
+                                                            open={openModal}
+                                                            close={() => setOpenModal(false)}
+                                                            product={previewProduct.product}
+                                                        />
                                                         <Grid item container direction="column" spacing={2}>
                                                             <Grid item >
                                                                 <Typography gutterBottom variant="title" component="div">
@@ -178,7 +191,7 @@ const GetProducts = () => {
                                                                 </Typography>
                                                                 <Typography variant="body2" color="text.secondary">
                                                                     <img className="rating_img" src={star} alt="rating"></img>
-                                                                     {product.rating === null ? "N/A" : product.rating}
+                                                                    {product.rating === null ? "N/A" : ((product.rating) * 100) / 5}
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item>
@@ -187,15 +200,13 @@ const GetProducts = () => {
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item>
-                                                            <Button sx={{ backgroundColor: "black" }} variant="contained">
-                                                                <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                                                                    Buy
-                                                                </Typography>
+                                                                <Button sx={{ backgroundColor: "black" }} variant="contained">
+                                                                    <Typography sx={{ cursor: 'pointer' }} variant="body2">
+                                                                        Buy
+                                                                    </Typography>
                                                                 </Button>
                                                             </Grid>
                                                         </Grid>
-
-
                                                     </Item>
                                                 </Grid>
                                             );
@@ -206,9 +217,7 @@ const GetProducts = () => {
                         </React.Fragment>
                     </div>
                 )}
-
                 <Button sx={{ backgroundColor: "purple", marginLeft: "43%" }} className="showMore" variant="contained" onClick={showMoreProducts}>Show More</Button>
-
             </div>
         </div>
     );
