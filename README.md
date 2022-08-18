@@ -9,7 +9,7 @@
 - [x] Clicking in a row must open a product details page (not the external url)
 - [x] Clicking in the image must open a modal with a product quick preview
 - [x] The product details page should show related products
-- [ ] The product details page should have a counter for page visualizations, updated every time this page is viewed and saved using a web service 
+- [x] The product details page should have a counter for page visualizations, updated every time this page is viewed and saved using a web service 
   
 *not fully functional
 
