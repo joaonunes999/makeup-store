@@ -13,7 +13,7 @@ function Header() {
             <div className='navbar'>
 
                 <nav className="navigation">
-                    <img className="logo" src={logo} alt="logo"></img>
+                    <a href="/"><img className="logo" src={logo} alt="logo"></img></a>
                     <a href="/" className="brand-name">
                         Makeup Store
                     </a>

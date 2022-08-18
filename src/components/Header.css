@@ -4,8 +4,8 @@
 }
 
 .header .logo {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     margin-left: 1rem;
 }
 
@@ -95,10 +95,15 @@
         top: 60px;
         left: 0;
         flex-direction: column;
-        width: 100%;
-        height: calc(100vh - 77px);
+        width: 50%;
+        margin-left: 50%;
+        height: calc(100vh - 380px);
+       
         background-color: white;
-        border-top: 1px solid black;
+        border-top: 0.5px solid thistle;
+        border-left: 0.5px solid thistle;
+        border-right: 0.5px solid thistle;
+        border-bottom: 0.5px solid thistle;
     }
 
     .navigation-menu li {
@@ -120,5 +125,6 @@
 @media screen and (max-width: 768px) {
     .navigation-menu.expanded ul {
         display: block;
+        z-index: 1;
     }
 }

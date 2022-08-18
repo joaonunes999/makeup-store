@@ -176,12 +176,10 @@ const GetProducts = () => {
             );
         } else {
             if (products.length === 0) {
-                return (<h2  className="no-products">No products found</h2>);
+                return (<h2 className="no-products">No products found</h2>);
             };
         }
     }
-
-
 
     return (
 
@@ -211,7 +209,7 @@ const GetProducts = () => {
                                     boxShadow: "none",
                                 }}
                             >
-                                <Grid container spacing={2} justifyContent="center">
+                                <Grid  container spacing={2} justifyContent="center">
                                     {products.slice(0, count).map((product, index) => {
                                         if (product.price !== "0.0") {
                                             return (
