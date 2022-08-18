@@ -14,6 +14,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import ModalProduct from './components/Modal';
+import Link from '@mui/material/Link';
 
 const initialProductTypes = [
     { name: "Blush", value: "blush", checked: "false" },
@@ -42,17 +43,22 @@ const GetProducts = () => {
     const [count, setCount] = useState(15); // initial count to show initial valid items
     const [productTypes, setProductTypes] = useState([]);
     const [openModal, setOpenModal] = useState(false);
-    const [previewProduct, setPreviewProduct] = useState({product: {}, i: null});
+    const [previewProduct, setPreviewProduct] = useState({ product: {}, i: null });
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = (url) => {
+        setIsLoading(true);
         fetch(url)
             .then(response => {
                 return response.json()
             })
             .then(data => {
                 setProducts(data);
+                setIsLoading(false)
             })
     }
+
+
 
     const chooseProductType = (event) => {
         initialProductTypes.forEach(element => {
@@ -65,7 +71,7 @@ const GetProducts = () => {
     }
 
     const handlePreview = (index) => {
-        setPreviewProduct({product:products[index], i: index});
+        setPreviewProduct({ product: products[index], i: index });
         setOpenModal(true);
     }
 
@@ -74,7 +80,7 @@ const GetProducts = () => {
     }
 
     useEffect(() => {
-        fetchData("http://makeup-api.herokuapp.com/api/v1/products.json")
+        fetchData("http://makeup-api.herokuapp.com/api/v1/products.json");
     }, [])
 
     const Img = styled('img')({
@@ -138,8 +144,21 @@ const GetProducts = () => {
         );
     }
 
+    const checkLoading = () => {        
+        if (isLoading) {
+            return (
+                <div className="spinner-container">
+                    <div className="loading-spinner">
+                    </div>
+                </div>
+            );
+        }
+    }
+
     return (
+        
         <div className="ProductsPage">
+            
             <div className="Filters">
                 <h2>Filters</h2>
                 {
@@ -152,7 +171,9 @@ const GetProducts = () => {
             <div className="showProducts">
                 {products.length > 0 && (
                     <div className="Product">
+
                         <h1>Products</h1>
+
                         <React.Fragment>
                             <Paper
                                 sx={{
@@ -160,13 +181,14 @@ const GetProducts = () => {
                                     flexGrow: 1,
                                     boxShadow: "none",
                                 }}
-                            >
+                            >{ }
+
                                 <Grid container spacing={2} justifyContent="center">
                                     {products.slice(0, count).map((product, index) => {
                                         if (product.price !== "0.0") {
+
                                             return (
-                                                
-                                                <Grid key={product.id}
+                                                < Grid key={product.id}
                                                     item direction="row"
                                                     justifyContent="center"
                                                 >
@@ -183,15 +205,22 @@ const GetProducts = () => {
                                                         />
                                                         <Grid item container direction="column" spacing={2}>
                                                             <Grid item >
-                                                                <Typography gutterBottom variant="title" component="div">
-                                                                    {product.name}
+                                                                <Typography sx={{ textDecoration: "none" }} gutterBottom variant="title" component={Link}>
+                                                                    <Link sx={{
+                                                                        textDecoration: "none",
+                                                                        fontWeight: "bold",
+                                                                        color: "black"
+                                                                    }} href={`/product/${product.id}`}>
+                                                                        {product.name}
+                                                                    </Link>
                                                                 </Typography>
+
                                                                 <Typography variant="subtitle2" gutterBottom>
                                                                     {product.brand}
                                                                 </Typography>
                                                                 <Typography variant="body2" color="text.secondary">
                                                                     <img className="rating_img" src={star} alt="rating"></img>
-                                                                    {product.rating === null ? "N/A" : ((product.rating) * 100) / 5}
+                                                                    {product.rating === null ? " N/A" : ((product.rating) * 100) / 5}
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item>
@@ -215,11 +244,16 @@ const GetProducts = () => {
                                 </Grid>
                             </Paper>
                         </React.Fragment>
+
                     </div>
                 )}
+
+                                    {checkLoading()}
                 <Button sx={{ backgroundColor: "purple", marginLeft: "43%" }} className="showMore" variant="contained" onClick={showMoreProducts}>Show More</Button>
+
             </div>
-        </div>
+
+        </div >
     );
 }
 

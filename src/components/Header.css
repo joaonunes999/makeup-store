@@ -71,14 +71,15 @@
 }
 
 .navigation button img {
-    width: 20px;
-    height: 19px;
-    margin-bottom: 5px;
+    width: 19px;
+    height: 18px;
+    margin-bottom: -3px;
 }
 
 @media screen and (max-width: 768px) {
     .hamburger {
         display: block;
+        margin-right: 0%;
     }
 }
 
