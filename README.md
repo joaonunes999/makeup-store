@@ -1,5 +1,18 @@
 # Makeup Store
   
+## Requirements: 
+
+- [x] Show a list/table of all products (image, name, price, colors, rating, ...)
+- [x] *The list must be paginated and allow to filter and sort products by attributes
+- [x] Rating should be presented in a scale from 0 to 100
+- [x] There is a proper handling for fetching data from the API (loading, error, etc)
+- [x] Clicking in a row must open a product details page (not the external url)
+- [x] Clicking in the image must open a modal with a product quick preview
+- [x] The product details page should show related products
+- [ ] The product details page should have a counter for page visualizations, updated every time this page is viewed and saved using a web service 
+  
+*not fully functional
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -24,14 +37,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-## Requirements: 
 
-- [x] Show a list/table of all products (image, name, price, colors, rating, ...)
-- [ ] The list must be paginated and allow to filter and sort products by attributes
-- [x] Rating should be presented in a scale from 0 to 100
-- [x] There is a proper handling for fetching data from the API (loading, error, etc)
-- [x] Clicking in a row must open a product details page (not the external url)
-- [x] Clicking in the image must open a modal with a product quick preview
-- [x] The product details page should show related products
-- [ ] The product details page should have a counter for page visualizations, updated every time this page is viewed and saved using a web service
 
