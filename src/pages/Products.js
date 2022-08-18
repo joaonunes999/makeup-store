@@ -31,10 +31,10 @@ const initialProductTypes = [
 
 const initialRating = [
     { name: "All", value: "all", checked: "true" },
-    { name: "80-100", value: "80", checked: "false" },
-    { name: "60-79", value: "60", checked: "false" },
-    { name: "40-59", value: "40", checked: "false" },
-    { name: "20-39", value: "20", checked: "false" },
+    { name: "80-100", value: "4", checked: "false" },
+    { name: "60-79", value: "3", checked: "false" },
+    { name: "40-59", value: "2", checked: "false" },
+    { name: "20-39", value: "1", checked: "false" },
     { name: "0-19", value: "0", checked: "false" },
 ]
 
@@ -42,6 +42,7 @@ const GetProducts = () => {
     const [products, setProducts] = useState([]);
     const [count, setCount] = useState(15); // initial count to show initial valid items
     const [productTypes, setProductTypes] = useState([]);
+    const [rating, setRating] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [previewProduct, setPreviewProduct] = useState({ product: {}, i: null });
     const [isLoading, setIsLoading] = useState(false);
@@ -58,16 +59,36 @@ const GetProducts = () => {
             })
     }
 
-
-
     const chooseProductType = (event) => {
         initialProductTypes.forEach(element => {
             if (element.name === event.target.value) {
-                element.checked = "true";
-                setProductTypes(initialProductTypes);
-                fetchData("http://makeup-api.herokuapp.com/api/v1/products.json?product_type=" + element.value);
+                if (element.checked === "true") {
+                    element.checked = "false";
+                    setProductTypes(initialProductTypes);
+                    fetchData("http://makeup-api.herokuapp.com/api/v1/products.json");
+                } else {
+                    element.checked = "true";
+                    setProductTypes(initialProductTypes);
+                    fetchData("http://makeup-api.herokuapp.com/api/v1/products.json?product_type=" + element.value);
+                }
             }
         });
+    }
+
+    const chooseRating = (event) => {
+        initialRating.forEach(element => {
+            if (event.target.value === "All") {
+                element.checked = "false";
+                fetchData("https://makeup-api.herokuapp.com/api/v1/products.json");
+            } else if (element.name === event.target.value) {
+                element.checked = "true";
+                setRating(rating);
+                var twoElement = parseInt(element.value) + 1;
+                fetchData("https://makeup-api.herokuapp.com/api/v1/products.json?rating_greater_than=" + element.value + "&rating_less_than=" + twoElement);
+            } else {
+                element.checked = "false";
+            }
+        })
     }
 
     const handlePreview = (index) => {
@@ -106,9 +127,9 @@ const GetProducts = () => {
                     {
                         initialProductTypes.map((item) => {
                             if (item.checked === "true")
-                                return <FormControlLabel value={item.name} control={<Checkbox defaultChecked />} label={item.name} />
+                                return <FormControlLabel key={item.id} value={item.name} onChange={chooseProductType} control={<Checkbox checked />} label={item.name} />
                             else {
-                                return <FormControlLabel value={item.name} onChange={chooseProductType} control={<Checkbox />} label={item.name} />
+                                return <FormControlLabel key={item.id} value={item.name} onChange={chooseProductType} control={<Checkbox />} label={item.name} />
                             }
                         })
                     }
@@ -130,10 +151,11 @@ const GetProducts = () => {
                     >
                         {
                             initialRating.map((item) => {
-                                if (item.checked === "true")
-                                    return <FormControlLabel value={item.value} control={<Radio defaultChecked />} label={item.name} />
+                                if (item.checked === "true") {
+                                    return <FormControlLabel key={item.id} value={item.name} onChange={chooseRating} control={<Radio checked />} label={item.name} />
+                                }
                                 else {
-                                    return <FormControlLabel value={item.value} control={<Radio />} label={item.name} onChange={null} />
+                                    return <FormControlLabel key={item.id} value={item.name} onChange={chooseRating} control={<Radio />} label={item.name} />
                                 }
                             })
                         }
@@ -147,13 +169,19 @@ const GetProducts = () => {
     const checkLoading = () => {
         if (isLoading) {
             return (
-                <div className="spinner-container">
-                    <div className="loading-spinner">
+                <div className="spinner">
+                    <div className="loading-spinner_1">
                     </div>
                 </div>
             );
+        } else {
+            if (products.length === 0) {
+                return (<h2  className="no-products">No products found</h2>);
+            };
         }
     }
+
+
 
     return (
 
@@ -162,18 +190,19 @@ const GetProducts = () => {
             <div className="Filters">
                 <h2>Filters</h2>
                 {
-                    displayProductTypes()
+                    displayRating()
                 }
                 {
-                    displayRating()
+                    displayProductTypes()
                 }
             </div>
             <div className="showProducts">
+
                 {products.length > 0 && (
+
                     <div className="Product">
 
                         <h1>Products</h1>
-
                         <React.Fragment>
                             <Paper
                                 sx={{
@@ -181,8 +210,7 @@ const GetProducts = () => {
                                     flexGrow: 1,
                                     boxShadow: "none",
                                 }}
-                            >{ }
-
+                            >
                                 <Grid container spacing={2} justifyContent="center">
                                     {products.slice(0, count).map((product, index) => {
                                         if (product.price !== "0.0") {
@@ -194,7 +222,7 @@ const GetProducts = () => {
                                                     <Item>
                                                         <Grid item>
                                                             <ButtonBase sx={{ width: 128, height: 128, marginBottom: "1rem" }}>
-                                                                <Img key={product.id} alt="complex" src={product.api_featured_image} onClick={() => handlePreview(index)} />
+                                                                <Img alt="complex" src={product.api_featured_image} onClick={() => handlePreview(index)} />
                                                             </ButtonBase>
                                                         </Grid>
                                                         <ModalProduct
@@ -205,21 +233,21 @@ const GetProducts = () => {
                                                         <Grid item container direction="column" spacing={2}>
                                                             <Grid item >
                                                                 <Typography sx={{ textDecoration: "none" }} gutterBottom variant="title" component={Link}>
-                                                                    <Link sx={{
-                                                                        textDecoration: "none",
-                                                                        fontWeight: "bold",
-                                                                        color: "black"
-                                                                    }} href={`/product/${product.id}`}>
-                                                                        {product.name}
-                                                                    </Link>
                                                                 </Typography>
+                                                                <Link sx={{
+                                                                    textDecoration: "none",
+                                                                    fontWeight: "bold",
+                                                                    color: "black"
+                                                                }} href={`/product/${product.id}`}>
+                                                                    {product.name}
+                                                                </Link>
 
                                                                 <Typography variant="subtitle2" gutterBottom>
                                                                     {product.brand}
                                                                 </Typography>
                                                                 <Typography variant="body2" color="text.secondary">
                                                                     <img className="rating_img" src={star} alt="rating"></img>
-                                                                    {product.rating === null ? " N/A" : ((product.rating) * 100) / 5}
+                                                                    {product.rating === null ? " N/A" : " " + Math.round((product.rating) * 100) / 5}
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item>
@@ -238,19 +266,20 @@ const GetProducts = () => {
                                                     </Item>
                                                 </Grid>
                                             );
-                                        } else { return null }
+                                        } else return null;
                                     })}
                                 </Grid>
                             </Paper>
+
                         </React.Fragment>
-
                     </div>
-                )}
 
+                )}
                 {checkLoading()}
                 <Button sx={{
                     backgroundColor: "purple", marginLeft: "43%", '@media screen and (max-width: 768px)': {
-                        marginLeft:"37%",  zIndex:"-1"}
+                        marginLeft: "37%", zIndex: "-1"
+                    }
                 }} className="showMore" variant="contained" onClick={showMoreProducts}>Show More</Button>
 
             </div>

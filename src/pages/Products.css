@@ -7,6 +7,10 @@
     background-color: antiquewhite;
 }
 
+.no-products{
+    text-align: center;
+}
+
 .Filters {
     background-color: antiquewhite;
     width: 20%;
@@ -61,7 +65,7 @@
     }
 }
 
-.loading-spinner {
+.loading-spinner_1 {
     margin-left: 46%;
     margin-top: 2rem;
     margin-bottom: 2rem;
