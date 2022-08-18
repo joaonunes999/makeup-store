@@ -5,7 +5,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import './Products.css';
-import star from './assets/star.png';
+import star from '../assets/star.png';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -13,7 +13,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
-import ModalProduct from './components/Modal';
+import ModalProduct from '../components/Modal';
 import Link from '@mui/material/Link';
 
 const initialProductTypes = [
@@ -144,7 +144,7 @@ const GetProducts = () => {
         );
     }
 
-    const checkLoading = () => {        
+    const checkLoading = () => {
         if (isLoading) {
             return (
                 <div className="spinner-container">
@@ -156,9 +156,9 @@ const GetProducts = () => {
     }
 
     return (
-        
+
         <div className="ProductsPage">
-            
+
             <div className="Filters">
                 <h2>Filters</h2>
                 {
@@ -186,7 +186,6 @@ const GetProducts = () => {
                                 <Grid container spacing={2} justifyContent="center">
                                     {products.slice(0, count).map((product, index) => {
                                         if (product.price !== "0.0") {
-
                                             return (
                                                 < Grid key={product.id}
                                                     item direction="row"
@@ -239,7 +238,7 @@ const GetProducts = () => {
                                                     </Item>
                                                 </Grid>
                                             );
-                                        }
+                                        } else { return null }
                                     })}
                                 </Grid>
                             </Paper>
@@ -248,8 +247,11 @@ const GetProducts = () => {
                     </div>
                 )}
 
-                                    {checkLoading()}
-                <Button sx={{ backgroundColor: "purple", marginLeft: "43%" }} className="showMore" variant="contained" onClick={showMoreProducts}>Show More</Button>
+                {checkLoading()}
+                <Button sx={{
+                    backgroundColor: "purple", marginLeft: "43%", '@media screen and (max-width: 768px)': {
+                        marginLeft:"37%",  zIndex:"-1"}
+                }} className="showMore" variant="contained" onClick={showMoreProducts}>Show More</Button>
 
             </div>
 

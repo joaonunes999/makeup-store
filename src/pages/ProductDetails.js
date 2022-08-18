@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react"
 import './ProductDetails.css';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import star from './assets/star.png';
-import next from './assets/next.png';
-import back from './assets/back.png';
+import star from '../assets/star.png';
+import next from '../assets/next.png';
+import back from '../assets/back.png';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { View } from "react-native";
@@ -13,15 +13,41 @@ import Link from '@mui/material/Link';
 import ButtonBase from '@mui/material/ButtonBase';
 import { styled } from '@mui/material/styles';
 
+//Firebase
+import '../Firebase.js';
+import { getDatabase, ref, child, get, set } from "firebase/database";
+
+
 const ProductDetails = () => {
     const productId = window.location.href.split("product/")[1];
     const [product, setProduct] = useState(null);
-    const [count, setCount] = useState(500); // initial count to show initial related items
+    const [count] = useState(500); // initial count to show initial related items
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [activeItemIndex, setActiveItemIndex] = useState(0);
     const chevronWidth = 40;
+    const [isLoading, setIsLoading] = useState(false);
+    const [views, setViews] = useState(0);
+
+    //Firebase
+
+    const dbRef = ref(getDatabase());
+
+    //Get Product Views
+    useEffect(() => {
+        get(child(dbRef, `Product-Views/${productId}/views/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                setViews(snapshot.val() + 1);
+            } else {
+                //if it doesn't exist, it didn't have views
+                console.log("First View");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, [])
 
     const fetchData = (url) => {
+        setIsLoading(true);
         fetch(url)
             .then(response => {
                 return response.json()
@@ -31,35 +57,37 @@ const ProductDetails = () => {
             })
     }
 
+    const checkLoading = () => {
+        if (isLoading) {
+            return (
+                <div className="spinner-container">
+                    <div className="loading-spinner">
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    useEffect(() => {
+        setTimeout(function () { set(child(dbRef, `Product-Views/${productId}/views/`), views)}, 4000);
+    })
+
     const fetchAllData = (url) => {
+        
         fetch(url)
             .then(response => {
                 return response.json()
             })
             .then(data => {
                 setRelatedProducts(data);
+                setIsLoading(false);
             })
     }
 
     useEffect(() => {
-        fetchData("http://makeup-api.herokuapp.com/api/v1/products/" + productId + ".json");
+        if (productId != null)
+            fetchData("http://makeup-api.herokuapp.com/api/v1/products/" + productId + ".json");
     }, [])
-
-    const useDeviceDetect = () => {
-        const [width, setWidth] = useState(window.innerWidth);
-        const handleWindowResize = () => {
-            setWidth(window.innerWidth);
-        }
-
-        useEffect(() => {
-            window.addEventListener('resize', handleWindowResize);
-            return () => {
-                window.removeEventListener('resize', handleWindowResize);
-            }
-        }, []);
-
-        return (width <= 768);
-    }
 
     const Img = styled('img')({
         margin: 'auto',
@@ -72,34 +100,28 @@ const ProductDetails = () => {
         return (
             <div className="Product">
                 <Box sx={{ width: '100%' }}>
-                    <Grid sx={{
-                        '@media screen and (max-width: 768px)': {
-                            
-
-                        }
-                    }}
-                        container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         <Grid className="grid_image" xs={6} sx={{
-                        '@media screen and (max-width: 768px)': {
-                           
-                           textAlign:"center",
-                           alignItems:"center",
+                            '@media screen and (max-width: 768px)': {
 
-                        }
-                    }} >
+                                textAlign: "center",
+                                alignItems: "center",
+
+                            }
+                        }} >
                             <img className="productImage" alt="product_image" src={product.api_featured_image}></img>
                         </Grid>
                         <Grid className="especifications" xs={6} sx={{
-                        '@media screen and (max-width: 768px)': {
-                        
-                           margin: "7rem",
-                           marginTop: "-4rem",
-                           marginBottom: "4rem",
-                           textAlign:"center",
-                           alignItems:"center",
+                            '@media screen and (max-width: 768px)': {
 
-                        }
-                    }}>
+                                margin: "7rem",
+                                marginTop: "-4rem",
+                                marginBottom: "4rem",
+                                textAlign: "center",
+                                alignItems: "center",
+
+                            }
+                        }}>
                             <h1 className="title">{product.name}</h1>
                             <Grid container direction="row">
                                 <p className="brand"> Brand:&nbsp;</p>
@@ -144,13 +166,20 @@ const ProductDetails = () => {
                                 </Typography>
                             </Button>
                             <br />
+                            <Grid container direction="row">
+                                <p className="views">Views:&nbsp; </p>
+                                <p>{views}</p>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Box>
+            
                 <div className="related_products">
                     <h2>Related Products</h2>
                 </div>
+                
                 <div className="carousel" style={{ padding: `4rem ${chevronWidth}px`, marginLeft: `15%`, marginRight: `15%`, height: '80' }}>
+                
                     <ItemsCarousel
                         requestToChangeActive={setActiveItemIndex}
                         activeItemIndex={activeItemIndex}
@@ -164,6 +193,7 @@ const ProductDetails = () => {
                         alwaysShowChevrons
                         infiniteLoop
                     >
+                        {checkLoading()}
                         {fetchAllData("http://makeup-api.herokuapp.com/api/v1/products.json?brand=" + product.brand)}
 
                         {relatedProducts.slice(0, count).map((product) => {
@@ -181,15 +211,14 @@ const ProductDetails = () => {
                                         <Grid item container direction="column" spacing={2}>
                                             <Grid item >
                                                 <Typography sx={{ textDecoration: "none" }} gutterBottom variant="title" component={Link}>
-                                                    <Link sx={{
-                                                        textDecoration: "none",
-                                                        fontWeight: "bold",
-                                                        color: "black"
-                                                    }} href={`/product/${product.id}`}>
-                                                        {product.name}
-                                                    </Link>
                                                 </Typography>
-
+                                                <Link sx={{
+                                                    textDecoration: "none",
+                                                    fontWeight: "bold",
+                                                    color: "black"
+                                                }} href={`/product/${product.id}`}>
+                                                    {product.name}
+                                                </Link>
                                                 <Typography variant="subtitle2" gutterBottom>
                                                     {product.brand}
                                                 </Typography>
@@ -217,12 +246,13 @@ const ProductDetails = () => {
                         })}
                     </ItemsCarousel>
                 </div>
+
                 <div className="carousel-device" style={{ padding: `4rem ${chevronWidth}px`, marginLeft: `15%`, marginRight: `15%`, height: '80' }}>
                     <ItemsCarousel
                         requestToChangeActive={setActiveItemIndex}
                         activeItemIndex={activeItemIndex}
                         numberOfCards={1}
-                        slidesToScroll={2}
+                        slidesToScroll={1}
                         gutter={20}
                         leftChevron={<button>{<img className="back" src={back}></img>}</button>}
                         rightChevron={<button>{<img className="next" src={next}></img>}</button>}
@@ -231,6 +261,7 @@ const ProductDetails = () => {
                         alwaysShowChevrons
                         infiniteLoop
                     >
+                        {checkLoading()}
                         {fetchAllData("http://makeup-api.herokuapp.com/api/v1/products.json?brand=" + product.brand)}
 
                         {relatedProducts.slice(0, count).map((product) => {
@@ -248,15 +279,14 @@ const ProductDetails = () => {
                                         <Grid item container direction="column" spacing={2}>
                                             <Grid item >
                                                 <Typography sx={{ textDecoration: "none" }} gutterBottom variant="title" component={Link}>
-                                                    <Link sx={{
-                                                        textDecoration: "none",
-                                                        fontWeight: "bold",
-                                                        color: "black"
-                                                    }} href={`/product/${product.id}`}>
-                                                        {product.name}
-                                                    </Link>
                                                 </Typography>
-
+                                                <Link sx={{
+                                                    textDecoration: "none",
+                                                    fontWeight: "bold",
+                                                    color: "black"
+                                                }} href={`/product/${product.id}`}>
+                                                    {product.name}
+                                                </Link>
                                                 <Typography variant="subtitle2" gutterBottom>
                                                     {product.brand}
                                                 </Typography>
@@ -285,7 +315,9 @@ const ProductDetails = () => {
                     </ItemsCarousel>
                 </div>
             </div >
+
         );
+
 
 }
 export default ProductDetails;
