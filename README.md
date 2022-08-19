@@ -1,6 +1,16 @@
 # Makeup Store
+
+Used API - http://makeup-api.herokuapp.com/
+
+## Technologies and Languages used
+
+- React.JS
+- Node.JS
+- Realtime Firebase
+- JavaScript
+- CSS
   
-## Requirements: 
+## Features
 
 - [x] Show a list/table of all products (image, name, price, colors, rating, ...)
 - [x] *The list must be paginated and allow to filter and sort products by attributes
@@ -12,6 +22,11 @@
 - [x] The product details page should have a counter for page visualizations, updated every time this page is viewed and saved using a web service 
   
 *not fully functional
+
+## Future Improvements
+
+- Improve filters and sorting
+- Improve responsive behavior
 
 ## Available Scripts
 
@@ -35,7 +50,9 @@ Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+
+## Screenshots
+
 
 
 
