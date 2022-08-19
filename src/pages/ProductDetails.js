@@ -134,7 +134,7 @@ const ProductDetails = () => {
                             <Grid container direction="row">
                                 <p className="ratingProduct"> Rating:&nbsp; </p>
                                 <img className="rating_img" src={star} alt="rating"></img>&nbsp;
-                                <p>{product.rating === null ? "N/A" : ((product.rating) * 100) / 5}</p>
+                                <p>{product.rating === null ? "N/A" : " " + Math.round((product.rating) * 100) / 5}</p>
                             </Grid>
                             <Grid container direction="row">
                                 <p className="about">Description:&nbsp; </p>
@@ -224,7 +224,7 @@ const ProductDetails = () => {
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
                                                     <img className="rating_img" src={star} alt="rating"></img>
-                                                    {product.rating === null ? " N/A" : ((product.rating) * 100) / 5}
+                                                    {product.rating === null ? " N/A" : " " + Math.round((product.rating) * 100) / 5}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
@@ -292,7 +292,7 @@ const ProductDetails = () => {
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
                                                     <img className="rating_img" src={star} alt="rating"></img>
-                                                    {product.rating === null ? " N/A" : ((product.rating) * 100) / 5}
+                                                    {product.rating === null ? " N/A" : " " + Math.round((product.rating) * 100) / 5}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
