@@ -14,6 +14,7 @@ const ModalProduct = ({ open, close, product }) => {
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
+
     };
 
     return (
@@ -24,7 +25,19 @@ const ModalProduct = ({ open, close, product }) => {
             aria-labelledby="modal-product-title"
             aria-describedby="modal-product-description"
         >
-            <Box sx={styleModal}>
+            <Box sx={{
+                styleModal, '@media screen and (max-width: 768px)': {
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 180,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }
+            }}>
                 <img className="imgModal" alt="img_modal" src={product.api_featured_image} />
                 <Typography id="modal-product-title" variant="h6" component="h2">
                     {product.name}
@@ -33,7 +46,7 @@ const ModalProduct = ({ open, close, product }) => {
                     {product.description}
                 </Typography>
             </Box>
-        </Modal>
+        </Modal >
 
 
     );
