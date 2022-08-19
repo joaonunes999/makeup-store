@@ -53,6 +53,17 @@ The build is minified and the filenames include the hashes.\
 
 ## Screenshots
 
+![](https://i.imgur.com/xBflLV1.png)
+![](https://i.imgur.com/bTSVI7j.png)
+![](https://i.imgur.com/jV3GCNr.png)
+![](https://i.imgur.com/0zLgURh.png)
+![](https://i.imgur.com/HtEnUid.png)
+![](https://i.imgur.com/yKfVjAj.png)
+![](https://i.imgur.com/Jvtom4p.png)
+![](https://i.imgur.com/NeJuA82.png)
+![](https://i.imgur.com/j1SSdDK.png)
+![](https://i.imgur.com/VZ8e52m.png)
+![](https://i.imgur.com/6khBLaP.png)
 
 
 
