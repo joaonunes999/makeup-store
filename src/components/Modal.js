@@ -3,20 +3,6 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
 const ModalProduct = ({ open, close, product }) => {
-
-    const styleModal = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-
-    };
-
     return (
         <Modal
             key={product.id}
@@ -26,7 +12,15 @@ const ModalProduct = ({ open, close, product }) => {
             aria-describedby="modal-product-description"
         >
             <Box sx={{
-                styleModal, '@media screen and (max-width: 768px)': {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+                boxShadow: 24,
+                p: 4, '@media screen and (max-width: 768px)': {
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
